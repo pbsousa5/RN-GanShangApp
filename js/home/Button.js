@@ -16,7 +16,7 @@ export default class Button extends Component {
 
     render() {
         return (<TouchableOpacity style={[styles.flex, styles.center]} onPress={this.props.action}>
-                <Image source={this.props.img}></Image>
+                <Image source={{uri:this.props.img}} style={{width:40, height:40}}/>
                 <Text style={styles.text}>{this.props.text}</Text>
         </TouchableOpacity>);
     }

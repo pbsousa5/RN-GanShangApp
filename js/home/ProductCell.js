@@ -18,10 +18,11 @@ const IMG_SHOUCANG = require('./img/shoucang.png');
 
 export default class ProductCell extends Component{
     render(){
+        var data = this.props.data;
         return (<TouchableOpacity onPress={this.props.didselect} style={[styles.rowDirection, styles.verCenter, styles.cell_height]}>
             <View style={{flex:1}}><Image source={IMG_SAOMIAOQIANG}/></View>
             <View style={{flex:2}}>
-                <Text style={styles.name}>维融条码有线扫描枪</Text>
+                <Text style={styles.name}>{data.product_name}</Text>
                 <Text style={styles.intro}>超市收银快递单专用条形码枪巴把枪器</Text>
                 <Text style={styles.price_padding}>￥<Text style={styles.price}>489</Text>.00</Text>
                 <View style={[styles.rowDirection, styles.verCenter]}><Image style={styles.icon_margin} source={IMG_XIAOLIANG}/><Text style={styles.intro}>111</Text><Image style={styles.icon_margin} source={IMG_SHOUCANG}/><Text style={styles.intro}>567</Text></View>

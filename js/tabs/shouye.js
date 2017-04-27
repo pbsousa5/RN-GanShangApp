@@ -24,10 +24,11 @@ import ProductCell from '../home/ProductCell';
 import ProductSection from '../home/ProductSection';
 import SearchPage from '../home/SearchPage';
 import ProductDetailPage from '../home/ProductDetailPage';
+import ProductListPage from '../home/ProductListPage';
+import Api from '../common/Api';
 
 const IMG_ERWEIMA = require('./img/erweima-icon.png');
 const IMG_MSG = require('./img/warn-icon.png');
-const IMG_DIANCHAOJI = require('./img/dianchaoji.png');
 const IMG_DIAMOND = require('./img/diamond.png');
 const IMG_BANNER = require('../home/img/banner.png');
 
@@ -46,6 +47,30 @@ class List_shouye extends Component{
             isRefreshing: false,
             loaded: 0,
         };
+    }
+
+    componentDidMount() {
+        var _that = this;
+        Api.GET_Method(Api.category_list, (json)=>{
+
+            var category_list = [];
+
+            json.data.map(function (item, index, array){
+                category_list.push(
+                    <View key={index} style={{width:screenWidth/4}}>
+                        <Button text={item.category_name}
+                                img={Api.imagePath+item.category_app_icon}
+                                action={()=>{
+                                    _that.props.navigator.push({component:ProductListPage, title:item.category_name, params:{data:item}});
+                            }}/>
+                    </View>);
+            });
+
+            _that.setState({category_list:category_list});
+
+        }, (error)=>{
+            console.log('net work error!' + error);
+        });
     }
 
     _onRefresh() {
@@ -73,19 +98,12 @@ class List_shouye extends Component{
                 <Banner radio={144/320} data={[IMG_BANNER, IMG_BANNER, IMG_BANNER]}/>
 
                 <View style={styles.fourButtons}>
-                    <View style={{width:screenWidth/4}}><Button text="点钞机" img={IMG_DIANCHAOJI}/></View>
-                    <View style={{width:screenWidth/4}}><Button text="点钞机" img={IMG_DIANCHAOJI}/></View>
-                    <View style={{width:screenWidth/4}}><Button text="点钞机" img={IMG_DIANCHAOJI}/></View>
-                    <View style={{width:screenWidth/4}}><Button text="点钞机" img={IMG_DIANCHAOJI}/></View>
-                    <View style={{width:screenWidth/4}}><Button text="点钞机" img={IMG_DIANCHAOJI}/></View>
-                    <View style={{width:screenWidth/4}}><Button text="点钞机" img={IMG_DIANCHAOJI}/></View>
+                    {this.state.category_list}
                 </View>
 
                 <View>
                     <ProductSection title="敢尚优秀产品" img={IMG_DIAMOND} action={this.go_page.bind(this)}/>
                     <ProductCell didselect={this.didselect.bind(this, 'product')}/>
-                    <ProductCell/>
-                    <ProductCell/>
                 </View>
 
             </ScrollView>

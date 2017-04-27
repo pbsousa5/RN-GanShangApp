@@ -16,6 +16,7 @@ import {
 import NavigatorBar from '../navigation/NavigatorBar';
 import BaseComponent from '../base/BaseComponent';
 import ProductCell from './ProductCell';
+import Api from '../common/Api';
 
 
 export  default class ProductListPage extends BaseComponent{
@@ -24,18 +25,31 @@ export  default class ProductListPage extends BaseComponent{
         super(props);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
-            dataSource: ds.cloneWithRows([
-                'John', 'Joel', 'James', 'Jimmy', 'Jackson', 'Jillian', 'Julie', 'Devin'
-            ])
+            dataSource: ds
         };
+    }
+
+    _getUrl(page){
+        return Api.product_list + 'category_id=' + this.props.data.id + '&page=' + page;
+    }
+
+    componentDidMount() {
+        var _that = this;
+        var url = this._getUrl(1);
+
+        Api.GET_Method(url, (json)=>{
+            _that.setState({dataSource: this.state.dataSource.cloneWithRows(json.data)});
+        }, (error)=>{
+            console.log('net work error!' + error);
+        });
     }
 
     createView() {
         return (
             <View style={[styles.flex]}>
-                <ListView
+                <ListView enableEmptySections={true}
                     dataSource={this.state.dataSource}
-                    renderRow={(rowData) =>{return (<ProductCell />);}}
+                    renderRow={(rowData) =>{return (<ProductCell data={rowData}/>);}}
                 />
             </View>
         );
